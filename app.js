@@ -34,6 +34,7 @@ let Blog = mongoose.model("Blog", blogSchema);
 
 // RESTFUL ROUTES
 
+//INDEX ROUTE
 app.get('/', (req,res) => {
     res.redirect('/blogs') // This will redirect any user who goes onto site land in correct page
 });
@@ -46,6 +47,33 @@ app.get('/blogs',(req,res) => {
         }
     });
 });
+
+// NEW ROUTE
+app.get('/blogs/new', (req,res) => {
+    res.render('new');
+})
+// CREATE ROUTE
+app.post('/blogs', (req,res) =>{
+    //create blog (DB.create(data, callback(error, new variable) =>{if(err){console.log('Error!,err)}else{}}))
+    Blog.create(req.body.blog, (err,newBlog) =>{
+        if(err){
+            res.render("new")
+        } else {
+            res.redirect('/blogs');
+        }
+    });
+});
+
+// SHOW ROUTE
+app.get("/blogs/:id", (req, res) =>{
+    Blog.findById(req.params.id, (err, foundBlog) =>{
+        if(err){
+            res.redirect("/blogs");
+        } else {
+            res.render("show", {blog: foundBlog});
+        }
+    })
+})
 
 
 
